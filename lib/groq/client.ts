@@ -1,6 +1,19 @@
 import Groq from 'groq-sdk';
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+let groqInstance: Groq | null = null;
+
+function getGroq() {
+  if (!groqInstance) {
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey && typeof window === 'undefined') {
+      // Return a dummy client or handle missing key gracefully during build
+      // But actually, it's better to only throw when explicitly called in a non-build context.
+      // For build time, we can return null and handle it in callGroq.
+    }
+    groqInstance = new Groq({ apiKey: apiKey || 'MISSING_KEY_IN_BUILD' });
+  }
+  return groqInstance;
+}
 
 const MODEL = 'llama-3.1-8b-instant';
 
@@ -27,6 +40,12 @@ export async function callGroq(
 
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
+      const groq = getGroq();
+      if (process.env.GROQ_API_KEY === undefined && typeof window === 'undefined') {
+         // Silently fail or throw if we are actually trying to use it in production without a key
+         // But for build, we want to avoid crashing if possible.
+      }
+
       const response = await groq.chat.completions.create({
         model: MODEL,
         messages,
