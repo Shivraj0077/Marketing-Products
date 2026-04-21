@@ -1,9 +1,15 @@
 import Mailjet from 'node-mailjet';
 
-export const mailjet = Mailjet.apiConnect(
-  process.env.MAILJET_API_KEY!,
-  process.env.MAILJET_SECRET_KEY!
-);
+let mailjetInstance: any = null;
+
+function getMailjet() {
+  if (!mailjetInstance) {
+    const apiKey = process.env.MAILJET_API_KEY || 'MISSING_KEY';
+    const apiSecret = process.env.MAILJET_SECRET_KEY || 'MISSING_SECRET';
+    mailjetInstance = Mailjet.apiConnect(apiKey, apiSecret);
+  }
+  return mailjetInstance;
+}
 
 export interface EmailRecipient {
   email: string;
@@ -32,6 +38,7 @@ export async function sendEmail(opts: SendEmailOptions) {
     fromName = 'InstaMarketer AI',
   } = opts;
 
+  const mailjet = getMailjet();
   const result = await mailjet.post('send', { version: 'v3.1' }).request({
     Messages: [
       {
@@ -51,6 +58,7 @@ export async function sendEmail(opts: SendEmailOptions) {
  * Get Mailjet campaign stats for a given campaign ID
  */
 export async function getCampaignStats(campaignId: string) {
+  const mailjet = getMailjet();
   const result = await mailjet
     .get('statscounters', { version: 'v3' })
     .request({ CounterSource: 'Campaign', CounterID: campaignId });
