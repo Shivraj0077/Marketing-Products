@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #FFFFFF;
+  --color-surface: #F8FAFC;
+  --color-primary: #5E6AD2;
+  --color-accent: #38BDF8;
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #475569;
+  
+  --shadow-premium: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --shadow-lifted: 0 10px 40px rgba(0, 0, 0, 0.12);
+}
+
+@layer base {
+  html {
+     color-scheme: light;
+     font-size: 16px; /* Base font size */
+  }
+  body {
+    background-color: #FFFFFF;
+    color: #0F172A;
+    -webkit-font-smoothing: antialiased;
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+  }
+
+  /* Robust Typography Scaling */
+  h1 { @apply text-4xl md:text-5xl font-bold tracking-tight text-[#0F172A]; }
+  h2 { @apply text-2xl md:text-3xl font-bold tracking-tight text-[#0F172A]; }
+  h3 { @apply text-xl md:text-2xl font-semibold tracking-tight text-[#0F172A]; }
+  h4 { @apply text-lg md:text-xl font-semibold text-[#0F172A]; }
+  
+  p { @apply text-base text-[#475569]; }
+}
+
+@layer components {
+  /* Bespoke Dashboard Identity - Enhanced Visibility */
+  .dashboard-surface {
+    @apply bg-white border border-[#E2E8F0] rounded-[16px] transition-all duration-200 ease-out shadow-sm;
+  }
+  
+  .dashboard-surface:hover {
+    @apply translate-y-[-2px] border-[#CBD5E1] shadow-premium;
+  }
+
+  /* Interaction Layer - Bold & Visible */
+  .btn-primary {
+    @apply flex items-center justify-center gap-3 px-6 py-3 rounded-[12px] text-base font-bold transition-all duration-200 ease-out
+           bg-[#5E6AD2] hover:bg-[#4C58B8] text-white shadow-lifted active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply flex items-center justify-center gap-3 px-6 py-3 rounded-[12px] text-base font-bold transition-all duration-200 ease-out
+           bg-white border border-[#E2E8F0] text-[#0F172A] hover:bg-[#F8FAFC] hover:border-[#CBD5E1] shadow-sm active:scale-95;
+  }
+
+  /* Text Box (txtb) Visibility Focus */
+  input, textarea, select {
+    @apply bg-white border border-[#E2E8F0] text-[#0F172A] text-base px-4 py-3 rounded-[12px] 
+           placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#5E6AD2]/20 focus:border-[#5E6AD2] transition-all;
+  }
+
+  /* Confidence Pill Meter */
+  .confidence-pill {
+    @apply h-3 bg-[#F1F5F9] rounded-full overflow-hidden flex gap-[3px] p-[3px] border border-[#E2E8F0];
+  }
+
+  .confidence-segment {
+    @apply h-full flex-1 rounded-[2px] bg-[#38BDF8]/10 transition-all duration-700;
+  }
+
+  .confidence-segment.active {
+    @apply bg-[#38BDF8] shadow-[0_0_8px_rgba(56,189,248,0.4)];
+  }
+
+  /* Typography metadata - Enhanced size */
+  .label-meta {
+    @apply text-xs font-bold text-[#64748B] uppercase tracking-[0.1em];
+  }
+}
+
+/* Skeleton Loading Shimmer - High Contrast */
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.loader-shimmer {
+  background: linear-gradient(90deg, #F8FAFC 0px, #FFFFFF 50%, #F8FAFC 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
