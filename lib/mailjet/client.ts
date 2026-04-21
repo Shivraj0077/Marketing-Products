@@ -1,6 +1,6 @@
 import Mailjet from 'node-mailjet';
 
-let mailjetInstance: any = null;
+let mailjetInstance: ReturnType<typeof Mailjet.apiConnect> | null = null;
 
 function getMailjet() {
   if (!mailjetInstance) {
