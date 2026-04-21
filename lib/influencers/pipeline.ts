@@ -1,5 +1,5 @@
 import { serperSearch } from '@/lib/serper/client';
-import { discoverInfluencers } from '@/lib/apify/client';
+import { discoverInfluencers, type ApifyInfluencerData } from '@/lib/apify/client';
 
 /**
  * Smart Influencer Discovery Pipeline
@@ -7,7 +7,7 @@ import { discoverInfluencers } from '@/lib/apify/client';
  * Step 2: Extract usernames via Regex
  * Step 3: Enrich data via Apify
  */
-export async function runInfluencerDiscoveryPipeline(keywords: string[], limit = 5) {
+export async function runInfluencerDiscoveryPipeline(keywords: string[], limit = 5): Promise<ApifyInfluencerData[]> {
   const searchQuery = `site:instagram.com instagram influencers ${keywords.join(' ')} "followers"`;
   
   // 1. Search Google via Serper
@@ -22,7 +22,7 @@ export async function runInfluencerDiscoveryPipeline(keywords: string[], limit =
   const usernameRegex = /(?:instagram\.com\/|@)([a-zA-Z0-9_\.]{1,30})/;
   const foundUsernames = new Set<string>();
 
-  searchResults.organic.forEach((result: any) => {
+  searchResults.organic.forEach((result: { link: string }) => {
     const match = result.link.match(usernameRegex);
     if (match && match[1] && !['p', 'reels', 'stories', 'explore'].includes(match[1])) {
       foundUsernames.add(match[1]);
@@ -41,6 +41,11 @@ export async function runInfluencerDiscoveryPipeline(keywords: string[], limit =
     return richData;
   } catch (error) {
     console.error('Apify enrichment failed, returning basic handles:', error);
-    return uniqueUsernames.map(u => ({ username: u }));
+    return uniqueUsernames.map(u => ({ 
+      username: u,
+      followersCount: 0,
+      biography: '',
+      businessEmail: undefined
+    }));
   }
 }

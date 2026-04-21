@@ -3,9 +3,9 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
-  LayoutDashboard, Package, Megaphone, Mail, Camera,
+  LayoutDashboard, Package, Megaphone, Camera,
   Users, MessageSquare, BarChart3, Settings, Sparkles,
-  LogOut, ChevronRight, Zap
+  LogOut
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { createClient } from '@/lib/supabase/client';
